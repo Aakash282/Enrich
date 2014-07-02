@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html> 
+
+
+<body> 
+<button onclick="slowerPlayback()" type="button">slower</button>
+<button onclick="fasterPlayback()" type="button">faster</button>
+<button onclick="playPause()" type="button">Play Pause</button>
+<br> 
+<audio id="book" controls="controls">
+  <source src="../audio/Luck.mp3" type="audio/mp3">
+  <!-- the following line is used so that the audio can be heard by any browser -->
+  <!-- <source src="mov_bbb.ogg" type="video/ogg"> -->
+  Your browser does not support HTML5 video.
+</audio>
+
+<script>
+myBook=document.getElementById("book");
+maxPlaybackRate = 1.5;
+minPlaybackRate = 0.5;
+
+function getPlaySpeed(){ 
+  	alert(myBook.playbackRate)
+} 
+
+// adjust playback speeds based on users input
+function fasterPlayback(){
+	if (myBook.playbackRate < maxPlaybackRate){
+		myBook.playbackRate=myBook.playbackRate + 0.25;
+	}
+}
+function slowerPlayback(){ 
+	if (myBook.playbackRate > minPlaybackRate){
+  		myBook.playbackRate=myBook.playbackRate - 0.25;
+	}
+} 
+
+function playPause(){
+	if (myBook.paused) {
+		myBook.play();
+	}
+	else {
+		myBook.pause();
+	}
+}
+</script> 
+
+</body> 
+</html>
