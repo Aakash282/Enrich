@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 <head>
-  Enrich: empowering audio files
+  <title>Enrich: empowering audio files</title>
   <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script>
@@ -10,7 +10,7 @@
 </head>
 
 <body>
-
+  <!-- Create an html5 audio player -->
   <audio id='myBook' controls ></audio> 
   <input type='file' id='selectedFile' 
   onchange='handleFiles(this.files)' /> 
@@ -19,76 +19,74 @@
   <br> 
 
   <script>
+
+  // load in the mp3 file and create a handle. 
   function handleFiles(files){ 
           var myURL = window.URL || window.webkitURL
         	// console.log('winurl='+ myURL);
             var file = window.URL.createObjectURL(files[0]); 
-            document.getElementById('myBook').src = file; 
-            document.getElementById('myBook').load();
-            document.getElementById('myBook').play();
+            myBook = document.getElementById('myBook');
+            myBook.src = file; 
+            myBook.load();
+            myBook.play();
         }
+
+    // setting up some constants
     maxPlaybackRate = 1.75;
     minPlaybackRate = 0.5;
-    // var input = document.getElementById("filepath");
-    // localStorage.setItem("path", input.value);
-
-    // var input = document.querySelector('input[type=file]');
-    // input.onchange = function () {
-    //   var book = input.files[0];
-    //   document.getElementById('myBook').src = book;
-    //   upload(book);
-    // };
 
 
-
+    // basic functions of the player that we will want to access
     function getPlaySpeed(){ 
-        alert(document.getElementById('myBook').playbackRate)
+        alert(myBook.playbackRate)
     } 
 
     // adjust playback speeds based on users input
     function fasterPlayback(){
-      if (document.getElementById('myBook').playbackRate < maxPlaybackRate){
-        document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate + 0.25;
+      if (myBook.playbackRate < maxPlaybackRate){
+        myBook.playbackRate=myBook.playbackRate + 0.25;
       }
     }
     function slowerPlayback(){ 
-      if (document.getElementById('myBook').playbackRate > minPlaybackRate){
-          document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate - 0.25;
+      if (myBook.playbackRate > minPlaybackRate){
+          myBook.playbackRate=myBook.playbackRate - 0.25;
       }
     } 
 
     function pause(){
-      document.getElementById('myBook').pause();
+      myBook.pause();
     }
 
     function play(){
-      document.getElementById('myBook').play();
+      myBook.play();
     }
 
+
+    // voice commands
     "use strict";
     if (annyang) {
       var getPlaySpeed = function() {
-        alert(document.getElementById('myBook').playbackRate)
+        alert(myBook.playbackRate)
       };
 
       var fasterPlayback = function() {
-        if (document.getElementById('myBook').playbackRate < maxPlaybackRate){
-           document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate + 0.25;
+        if (myBook.playbackRate < maxPlaybackRate){
+           myBook.playbackRate=myBook.playbackRate + 0.25;
          }
       };
 
       var slowerPlayback = function() {
-        if (document.getElementById('myBook').playbackRate > minPlaybackRate){
-           document.getElementById('myBook').playbackRate = document.getElementById('myBook').playbackRate - 0.25;
+        if (myBook.playbackRate > minPlaybackRate){
+           myBook.playbackRate = myBook.playbackRate - 0.25;
          }
       };
 
       var pause = function() {
-        document.getElementById('myBook').pause();
+        myBook.pause();
       };
 
       var play = function() {
-        document.getElementById('myBook').play();
+        myBook.play();
       };
 
 
