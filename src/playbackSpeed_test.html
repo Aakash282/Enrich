@@ -1,49 +1,89 @@
 <!DOCTYPE html> 
 <html> 
+<head>
+
+	
+</head>
+
+<body>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
+	<script>
+		if (annyang) {
+		  // Let's define a command.
+		  var commands = {
+		    'wait': 	pause();
+		    'pause': 	pause();
+		    'stop': 	pause();
+			'go ahead'	play();
+			'play': 	play();
+			'continue': play();
+			'resume': 	play();
+			'faster': 	fasterPlayback();
+			'slower': 	slowerPlayback();
+			'current speed': 	getPlaySpeed();}
+		  };
+
+		  // Add our commands to annyang
+		  annyang.addCommands(commands);
+
+		  // Start listening.
+		  annyang.start();
+		}
+	</script>
+	<audio id='myBook' controls ></audio> 
+	<input type='file' id='selectedFile' 
+	onchange='handleFiles(this.files)' /> 
+	<button onclick="slowerPlayback()" type="button">slower</button>
+	<button onclick="fasterPlayback()" type="button">faster</button>
+	<button onclick="playPause()" type="button">Play Pause</button>
+	<br> 
+
+	<script>
+	function handleFiles(files){ 
+        	var myURL = window.URL || window.webkitURL
+    		console.log('winurl='+ myURL);
+            var file = window.URL.createObjectURL(files[0]); 
+            document.getElementById('myBook').src = file; 
+            document.getElementById('myBook').load();
+            document.getElementById('myBook').play();
+        }
+		maxPlaybackRate = 1.5;
+		minPlaybackRate = 0.5;
+		var input = document.getElementById("filepath");
+		localStorage.setItem("path", input.value);
+
+		var input = document.querySelector('input[type=file]');
+		input.onchange = function () {
+		  var book = input.files[0];
+		  document.getElementById('myBook').src = book;
+		  upload(book);
+		};
 
 
-<body> 
-<button onclick="slowerPlayback()" type="button">slower</button>
-<button onclick="fasterPlayback()" type="button">faster</button>
-<button onclick="playPause()" type="button">Play Pause</button>
-<br> 
-<audio id="book" controls="controls">
-  <source src="../audio/Luck.mp3" type="audio/mp3">
-  <!-- the following line is used so that the audio can be heard by any browser -->
-  <!-- <source src="mov_bbb.ogg" type="video/ogg"> -->
-  Your browser does not support HTML5 video.
-</audio>
+		function getPlaySpeed(){ 
+		  	alert(myBook.playbackRate)
+		} 
 
-<script>
-myBook=document.getElementById("book");
-maxPlaybackRate = 1.5;
-minPlaybackRate = 0.5;
+		// adjust playback speeds based on users input
+		function fasterPlayback(){
+			if (myBook.playbackRate < maxPlaybackRate){
+				myBook.playbackRate=myBook.playbackRate + 0.25;
+			}
+		}
+		function slowerPlayback(){ 
+			if (myBook.playbackRate > minPlaybackRate){
+		  		myBook.playbackRate=myBook.playbackRate - 0.25;
+			}
+		} 
 
-function getPlaySpeed(){ 
-  	alert(myBook.playbackRate)
-} 
+		function pause(){
+			myBook.pause();
+		}
 
-// adjust playback speeds based on users input
-function fasterPlayback(){
-	if (myBook.playbackRate < maxPlaybackRate){
-		myBook.playbackRate=myBook.playbackRate + 0.25;
-	}
-}
-function slowerPlayback(){ 
-	if (myBook.playbackRate > minPlaybackRate){
-  		myBook.playbackRate=myBook.playbackRate - 0.25;
-	}
-} 
-
-function playPause(){
-	if (myBook.paused) {
-		myBook.play();
-	}
-	else {
-		myBook.pause();
-	}
-}
-</script> 
+		function play(){
+			myBook.play();
+		}
+	</script> 
 
 </body> 
 </html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+  Enrich: empowering audio files
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>
+  
+  </script>
+</head>
+
+<body>
+
+  <audio id='myBook' controls ></audio> 
+  <input type='file' id='selectedFile' 
+  onchange='handleFiles(this.files)' /> 
+  <button onclick="slowerPlayback()" type="button">slower</button>
+  <button onclick="fasterPlayback()" type="button">faster</button>
+  <br> 
+
+  <script>
+  function handleFiles(files){ 
+          var myURL = window.URL || window.webkitURL
+        	// console.log('winurl='+ myURL);
+            var file = window.URL.createObjectURL(files[0]); 
+            document.getElementById('myBook').src = file; 
+            document.getElementById('myBook').load();
+            document.getElementById('myBook').play();
+        }
+    maxPlaybackRate = 1.75;
+    minPlaybackRate = 0.5;
+    // var input = document.getElementById("filepath");
+    // localStorage.setItem("path", input.value);
+
+    // var input = document.querySelector('input[type=file]');
+    // input.onchange = function () {
+    //   var book = input.files[0];
+    //   document.getElementById('myBook').src = book;
+    //   upload(book);
+    // };
+
+
+
+    function getPlaySpeed(){ 
+        alert(document.getElementById('myBook').playbackRate)
+    } 
+
+    // adjust playback speeds based on users input
+    function fasterPlayback(){
+      if (document.getElementById('myBook').playbackRate < maxPlaybackRate){
+        document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate + 0.25;
+      }
+    }
+    function slowerPlayback(){ 
+      if (document.getElementById('myBook').playbackRate > minPlaybackRate){
+          document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate - 0.25;
+      }
+    } 
+
+    function pause(){
+      document.getElementById('myBook').pause();
+    }
+
+    function play(){
+      document.getElementById('myBook').play();
+    }
+
+    "use strict";
+    if (annyang) {
+      var getPlaySpeed = function() {
+        alert(document.getElementById('myBook').playbackRate)
+      };
+
+      var fasterPlayback = function() {
+        if (document.getElementById('myBook').playbackRate < maxPlaybackRate){
+           document.getElementById('myBook').playbackRate=document.getElementById('myBook').playbackRate + 0.25;
+         }
+      };
+
+      var slowerPlayback = function() {
+        if (document.getElementById('myBook').playbackRate > minPlaybackRate){
+           document.getElementById('myBook').playbackRate = document.getElementById('myBook').playbackRate - 0.25;
+         }
+      };
+
+      var pause = function() {
+        document.getElementById('myBook').pause();
+      };
+
+      var play = function() {
+        document.getElementById('myBook').play();
+      };
+
+
+      // Let's define some commands
+      var commands = {
+          'wait':   pause,
+          'pause':   pause,
+          'stop':   pause,
+          'go ahead':  play,
+          'play':   play,
+          'continue': play,
+          'resume':   play,
+          'faster':   fasterPlayback,
+          'slower':   slowerPlayback,
+          'current speed':   getPlaySpeed,
+      };
+
+        
+
+        // Add our commands to annyang
+        annyang.addCommands(commands);
+
+        // Start listening.
+        annyang.start();
+    }
+    else {
+      alert('failed')
+    }
+  </script> 
+
+</body> 
+</html>
