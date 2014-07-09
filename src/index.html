@@ -2,35 +2,60 @@
 <html> 
 <head>
   <title>Enrich: empowering audio files</title>
+  <!--Using annyang voice control library-->
   <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
+  <!--Using the aadsm Javascript ID3 tag reader -->
+  <script src="//rawgit.com/aadsm/JavaScript-ID3-Reader/master/dist/id3-minimized.js"></script>
+  <!--Using file reader js library-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script>
-  
-  </script>
 </head>
 
 <body>
-  <!-- Create an html5 audio player -->
-  <audio id='myBook' controls ></audio> 
-  <input type='file' id='selectedFile' 
-  onchange='handleFiles(this.files)' /> 
-  <button onclick="slowerPlayback()" type="button">slower</button>
-  <button onclick="fasterPlayback()" type="button">faster</button>
-  <br> 
+  <div>
+    <!-- Create an html5 audio player -->
+    <audio id='myBook' controls ></audio> 
+    <!--User uploads the input mp3-->
+    <input type='file' id="file" 
+    onchange='handleFiles(this.files)' /> 
+    <button onclick="slowerPlayback()" type="button">slower</button>
+    <button onclick="fasterPlayback()" type="button">faster</button>
+    <br> 
+  </div>
+  
+  <dl>
+        <dt>Enrich Frame Text</dt>
+        <dd id="enrichData"></dd>
+  </dl>
 
+  <noscript>If you don't allow Javascript then you cannot enjoy the internet</noscript>
   <script>
-
-  // load in the mp3 file and create a handle. 
-  function handleFiles(files){ 
-          var myURL = window.URL || window.webkitURL
-        	// console.log('winurl='+ myURL);
-            var file = window.URL.createObjectURL(files[0]); 
-            myBook = document.getElementById('myBook');
-            myBook.src = file; 
-            myBook.load();
-            myBook.play();
+    // we will later store the enrichments in this var
+    var enrichments = "";
+    // load in the mp3 file and create a handle. 
+    function handleFiles(files){ 
+        var myURL = window.URL || window.webkitURL
+        // console.log('winurl='+ myURL);
+        var file = window.URL.createObjectURL(files[0]); 
+        myBook = document.getElementById('myBook');
+        myBook.src = file; 
+        myBook.load();
+        myBook.play();
+        enrich(document.getElementById("file"));
+    }
+    
+    // grab the enrichments from the id3 tag in the file
+    function enrich(elem) {
+        if (elem.id === "file"){
+            var url = elem.files[0].urn ||elem.files[0].name;
+            ID3.loadTags(url, function() {
+                var tags = ID3.getAllTags(url);
+                enrichments = tags.TXXX.data;
+            }, {tags: ["TXXX"], dataReader: FileAPIReader(elem.files[0])});
         }
-
+    }
+    
+    
+   
     // setting up some constants
     maxPlaybackRate = 1.75;
     minPlaybackRate = 0.5;
@@ -113,7 +138,7 @@
         annyang.start();
     }
     else {
-      alert('failed')
+      alert('annyang failed')
     }
   </script> 
 
