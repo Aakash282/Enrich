@@ -24,13 +24,18 @@
   
   <dl>
         <dt>Enrich Frame Text</dt>
-        <dd id="enrichData"></dd>
+        <dt id="enrichData">OLD</dt>
   </dl>
 
   <noscript>If you don't allow Javascript then you cannot enjoy the internet</noscript>
   <script>
-    // we will later store the enrichments in this var
+    // enrichments will contain the raw tag string that is encoded into the file
     var enrichments = "";
+
+    // we will tokenize enrichments and store them as contents and events
+    var contents = [];
+    var events = [];
+
     // load in the mp3 file and create a handle. 
     function handleFiles(files){ 
         var myURL = window.URL || window.webkitURL
@@ -40,20 +45,63 @@
         myBook.src = file; 
         myBook.load();
         myBook.play();
-        enrich(document.getElementById("file"));
+        getEnrichments(document.getElementById("file"));
+        
     }
     
     // grab the enrichments from the id3 tag in the file
-    function enrich(elem) {
+    function getEnrichments(elem) {
         if (elem.id === "file"){
             var url = elem.files[0].urn ||elem.files[0].name;
             ID3.loadTags(url, function() {
                 var tags = ID3.getAllTags(url);
                 enrichments = tags.TXXX.data;
+                enrich();
+                
             }, {tags: ["TXXX"], dataReader: FileAPIReader(elem.files[0])});
         }
     }
-    
+
+    function enrich() {
+    	document.getElementById("enrichData").innerHTML = enrichments;
+    	tokenize();
+    }
+
+    // this function will tokenize the enrichments string and place the tokens
+    // in the appropriate lists
+    function tokenize() {
+    	var i; // start index for token
+    	var j = 0; // end index for token
+    	var token = "";
+    	for (i = 0; (i < enrichments.length - 1) && (j < enrichments.length - 1); i = j + 1) {
+    		// shift j to the next character (usually to the next open parens)
+    		j++;
+
+    		// get the index for the end of the token 
+    		while ((enrichments.charAt(j) != ')') && (j < enrichments.length)) { j++; }
+
+    		// create the token object and add it to the contents list
+    		createContent(enrichments.substring(i+1, j));
+    	}
+    }
+
+    // this function takes in a token that needs to be added to the content list, creates the 
+    // content object, and adds the object to the list of contents
+    function createContent(token) {
+    	// the structure of content object will be:
+    	// {type: contentType, time: contentTime, payload: contentPayload}
+    	var contentType = token.charAt(0);
+
+    	var minutes = parseInt(token.substring(3, token.indexOf(":")));
+    	var seconds = parseInt(token.substring(token.indexOf(":")+1, token.lastIndexOf(",")));
+    	var contentTime = (minutes * 60) + seconds;
+    	// alert(minutes + ":" + seconds + " = " + contentTime + " seconds.");
+
+    	var contentPayload = token.substring(token.indexOf("$")+1, token.lastIndexOf("$"));
+
+    	// create and add this content token to the list of contents
+    	contents[contents.length] = {type: contentType, time: contentTime, payload: contentPayload};
+    }
     
    
     // setting up some constants
