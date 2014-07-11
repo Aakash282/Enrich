@@ -1,0 +1,15 @@
+<iframe id="image" src="http://upload.wikimedia.org/wikipedia/en/8/87/Ringstrilogyposter.jpg" width="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+<script type="text/javascript">
+function resizeIframe() {
+    var height = document.documentElement.clientHeight;
+    height -= document.getElementById('image').offsetTop;
+    
+    // not sure how to get this dynamically
+    height -= 20; /* whatever you set your body bottom margin/padding to be */
+    
+    document.getElementById('image').style.height = height +"px";
+    
+};
+document.getElementById('image').onload = resizeIframe;
+window.onresize = resizeIframe;
+</script>
